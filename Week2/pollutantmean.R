@@ -1,29 +1,26 @@
-pollutantmean <- function(directory, pollutant, id){
-  
-result <-  if(directory == "specdata")
+pollutantmean <- function(directory, pollutant, id = 1:332)
+{
+  allowed_pollutants <- c("sulfate", "nitrate")
+ results <- if (length(directory) ==1 & length(pollutant) == 1 & pollutant %in% allowed_pollutants)
   {
-    if (pollutant == "sulfate" || pollutant == "nitrate")
+    
+    directory <- paste(getwd(), directory, sep = "/")
+    files_list = list.files(path = directory)
+   
+    pollutant_sum <- c()
+    
+    for (fileid in id)
     {
-      directory <- paste("./", directory, "/", sep = "")
-      files <- list.files(directory)
-      file_paths <- paste(directory,files, sep = "")
-      pollutant_data <- c();
-      for (fileid in id)
-      {
-        file_data <- read.csv(file_paths[fileid], header = TRUE, sep = ",")
-         pollutant_data <- c(pollutant_data, file_data[, pollutant] )
-      }
-      
-      mean(pollutant_data,na.rm = TRUE)
-      
+      file_name <- paste(directory,files_list[fileid], sep= "/")
+      file_data <-  read.csv(file_name, header = TRUE, sep = ",")
+      pollutant_sum <- c(pollutant_sum, file_data[,pollutant])
     }
+    
+    mean(pollutant_sum, na.rm = TRUE)
+  }
   else
   {
-    "Invalid pollutant"
+    "Invalid input"
   }
-}
-else{
-  "Invalid directory"
-}
-result
+ results
 }
