@@ -12,7 +12,7 @@ q1 <- function()
   
   q1_data <- read.csv(file_path)
   #head(q1_data)
-  length(q1_data[which(q1_data$VAL == 24),"VAL"])#53
+  q1_data[(q1_data$VAL == 24 & !is.na(q1_data$VAL)),] #53
   
 }
 
